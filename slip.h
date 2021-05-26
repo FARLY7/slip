@@ -44,20 +44,6 @@ void SLIP_reset(slip_t *slip);
 size_t SLIP_get_length(slip_t *slip);
 
 /** 
- * @brief Consume byte for SLIP encoding. Used for streams of data.
- * 
- * @note Need to manually add 'END' delimiter when finished encoding.
- * 
- * @param[in] slip : Pointer to SLIP encoder.
- * @param[in] byte : Byte to be encoded.
- * 
- * @return < 0 : Error
- *         = 0 : Encoded byte
- *         > 0 : Success/Finished (Length of encoded data)
- **/
-int SLIP_encode(slip_t *slip, uint8_t byte);
-
-/** 
  * @brief SLIP encodes a given frame
  * 
  * @param[in] slip : Pointer to SLIP encoder.
