@@ -53,7 +53,7 @@ size_t SLIP_get_length(slip_t *slip);
  * @return > 0 : Success (Length of encoded data)
  *         = 0 : Failed
  **/
-size_t SLIP_encode_frame(slip_t *slip, uint8_t *buf, size_t len);
+size_t SLIP_encode(slip_t *slip, const uint8_t *buf, size_t len);
 
 /** 
  * @brief Consume byte for SLIP decoding.

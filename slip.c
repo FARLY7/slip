@@ -67,7 +67,7 @@ size_t SLIP_get_length(slip_t *slip)
  *         = 0 : Encoded byte
  *         > 0 : Success/Finished (Length of encoded data)
  **/
-static int SLIP_encode(slip_t *slip, uint8_t byte)
+static int SLIP_encode_byte(slip_t *slip, uint8_t byte)
 {
     int remaining = slip->len - slip->wp;
 	int required = (byte == ESC || byte == END) ? 2 : 1;
@@ -102,12 +102,12 @@ static int SLIP_encode(slip_t *slip, uint8_t byte)
  * @return > 0 : Success (Length of encoded data)
  *         = 0 : Failed
  **/
-size_t SLIP_encode_frame(slip_t *slip, uint8_t *buf, size_t len)
+size_t SLIP_encode(slip_t *slip, const uint8_t *buf, size_t len)
 {
     SLIP_reset(slip);
 
     while(len--) {
-        if(SLIP_encode(slip, *buf++) < 0) {
+        if(SLIP_encode_byte(slip, *buf++) < 0) {
             /* SLIP encoding failed */
             return 0;
         }
