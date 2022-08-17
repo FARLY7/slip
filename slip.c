@@ -152,7 +152,9 @@ int SLIP_decode(slip_t *slip, uint8_t byte)
         case STATE_MESSAGE:
         {
             if(slip->wp == slip->len) {
-                slip->state = STATE_ERROR;
+                /* ERROR: Ran out of buffer space */
+                SLIP_reset(slip);
+                return -1;
             } else if(byte == ESC) {
                 slip->state = STATE_ESCAPE;
             } else {
@@ -169,14 +171,17 @@ int SLIP_decode(slip_t *slip, uint8_t byte)
                 slip->buf[slip->wp++] = ESC;
                 slip->state = STATE_MESSAGE;
             } else {
-                slip->state = STATE_ERROR;
+                /* ERROR: Wrong character received */
+                SLIP_reset(slip);
+                return -1;
             }
             break;
         }
         case STATE_ERROR: {
-            break;
+            SLIP_reset(slip);
+            return -1;
         }
     }
 
-    return -1;
+    return 0;
 }
