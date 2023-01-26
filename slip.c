@@ -106,6 +106,12 @@ size_t SLIP_encode(slip_t *slip, const uint8_t *buf, size_t len)
 {
     SLIP_reset(slip);
 
+    if(slip->encoding == SLIP_ENCODING_DOUBLE_ENDED && slip->wp == 0) {
+        /* Start of message */
+        /* Double encoded SLIP, where an END delimiter is also added to the beginning of the message */
+        slip->buf[slip->wp++] = END;
+    }
+
     while(len--) {
         if(SLIP_encode_byte(slip, *buf++) < 0) {
             /* SLIP encoding failed */
@@ -138,7 +144,11 @@ int SLIP_decode(slip_t *slip, uint8_t byte)
 
     if(byte == END)
     {
-        if(slip->wp > 0 && slip->state == STATE_MESSAGE) {
+        if(slip->wp == 0) {
+            /* Double ended SLIP encoding. This indicatees the beginning of a SLIP message */
+            retVal = 0;
+        }
+        else if(slip->wp > 0 && slip->state == STATE_MESSAGE) {
             retVal = slip->wp;
         } else {
             retVal = -1;

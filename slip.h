@@ -8,14 +8,23 @@ extern "C" {
 #endif
 
 /**
+ * @brief Type of SLIP encoding to use.
+ */
+typedef enum {
+    SLIP_ENCODING_SINGLE_ENDED, /* END delimiter is only added to the end of the msg */
+    SLIP_ENCODING_DOUBLE_ENDED  /* END delimiter is added to the beginning and the end of the msg */
+} slip_encoding_t;
+
+/**
  * @brief Private SLIP structure.
- * @note Structure is not to be accessed directly by user.
+ * @warning: Structure is not to be accessed directly by user.
  */
 typedef struct {
     uint8_t *buf;
     size_t   len;
     size_t   wp;
     uint8_t  state;
+    slip_encoding_t encoding;
 } slip_t;
 
 /** 
@@ -25,7 +34,7 @@ typedef struct {
  * @param[in] buf  : Buffer to hold encoded or decoded message.
  * @param[in] len  : Length of buffer
  **/
-void SLIP_init(slip_t *slip, uint8_t *buf, size_t len);
+void SLIP_init(slip_t *slip, uint8_t *buf, size_t len, slip_encoding_t encoding);
 
 /** 
  * @brief Reset SLIP encoder or decoder.
