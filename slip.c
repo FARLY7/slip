@@ -26,12 +26,13 @@ typedef enum {
  * @param[in] buf  : Buffer to hold encoded or decoded message.
  * @param[in] len  : Length of buffer
  **/
-void SLIP_init(slip_t *slip, uint8_t *buf, size_t len)
+void SLIP_init(slip_t *slip, uint8_t *buf, size_t len, slip_encoding_t encoding)
 {
     slip->buf = buf;
     slip->len = len;
     slip->state = STATE_MESSAGE;
     slip->wp = 0;
+    slip->encoding = encoding;
 }
 
 /** 
